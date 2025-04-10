@@ -12,7 +12,8 @@
         fetch('/api/people')
             .then(response => response.json())
             .then(data => {
-                const list = document.getElementById("peopleList");
+                /*const list = document.getElementById("peopleList");*/
+                const list = document.querySelector("#peopleList");
                 data.forEach(person => {
                     const li = document.createElement("li");
                     li.textContent = `${person.name} (Età: ${person.age})`;

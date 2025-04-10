@@ -18,7 +18,7 @@ namespace WebApplication2.Controllers.Api
     public class MoviesController : ControllerBase
     {
         // Stringa di connessione a SQL Server. Specifica il nome del server, il database e che si usa l'autenticazione Windows.
-        private readonly string _connectionString = "Server=FRANCESCO\\SQLEXPRESS;Database=prova_api;Trusted_Connection=True;TrustServerCertificate=True;";
+        private readonly string _connectionString = "Server=DESKTOP-KM2T7UL\\SQLEXPRESS;Database=prova_api;Trusted_Connection=True;TrustServerCertificate=True;";
 
         // Metodo che risponde a richieste HTTP GET
         [HttpGet]
@@ -95,7 +95,7 @@ namespace WebApplication2.Controllers.Api
 
             return Ok(movies);
         }
-
+        
 
 
     }

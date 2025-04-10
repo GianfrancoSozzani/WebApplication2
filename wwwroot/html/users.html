@@ -16,11 +16,11 @@
 
     <script>
         document.getElementById("userForm").addEventListener("submit", function(e) {
-            e.preventDefault();
+            e.preventDefault(); //su un bottone in un form serve per impedire il comportamento predefinito del browser.
             const user = {
                 name: document.getElementById("name").value,
                 email: document.getElementById("email").value
-            };
+            }; //oggetto javascript (oggetto a runtime)
 
             fetch('/api/users', {
                 method: 'POST',

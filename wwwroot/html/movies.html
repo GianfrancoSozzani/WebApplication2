@@ -2,24 +2,175 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Film</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .popup {
+            width: 500px;
+            background-color: white;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .contenitore-popup {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            align-items: center;
+        }
+        
+        .movie {
+            padding: 20px;
+            margin-top: 10px;
+            position: relative;
+        }
+        .btn-3 {
+            position: absolute;
+            top: 0;
+            right: 10px;
+        }
+
+    </style>
 </head>
 <body>
     <h1>Lista Film</h1>
-    <ul id="moviesList"></ul>
+    <!--<ul id="moviesList"></ul>-->
+    <div class="container text-center">
+        <div id="contenuto" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-2">
+        </div>
+    </div>
+    <div id="contenitore-popup" class="contenitore-popup d-none">
+        <div id="popup" class="popup d-flex flex-column ">
+
+        </div>
+    </div>
 
     <script>
+        const popup = document.querySelector("#contenitore-popup");
+        const popup_inner = document.querySelector("#popup");
+        function apri_popup(id) {
+            popup.classList.remove("d-none");
+            popup.classList.add("d-flex");
+
+            /*console.log(id);*/
+
+            fetch(`/api/movies/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Film non trovato");
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const movie = data[0];
+
+                    popup_inner.innerHTML = `
+                     <div class="movie">
+                         <h2>${movie.title}</h2>
+                         <p><strong>Anno:</strong> ${movie.year}</p>
+                         <p><strong>ID:</strong> ${movie.id}</p>
+                         <button class="btn btn-3 btn-danger" onclick="chiudi_popup()"><i class="bi bi-x-circle"></i></button>
+                     </div>
+                 `;
+                })
+                .catch(error => {
+                    container.innerHTML = `<p style="color:red;">${error.message}</p>`;
+                });
+
+
+        }
+        function chiudi_popup() {
+            popup.classList.remove("d-flex");
+            popup.classList.add("d-none");
+        }
+
+
+
         fetch('/api/movies')
             .then(response => response.json())
             .then(data => {
-                const list = document.getElementById("moviesList");
+                //const list = document.getElementById("moviesList");
+                const contenuto = document.getElementById("contenuto");
+                let a = "";
                 data.forEach(movie => {
-                    const li = document.createElement("li");
-                    li.textContent = `${movie.title} (Anno: ${movie.year})`;
-                    list.appendChild(li);
+                    //const li = document.createElement("li");
+                    //li.textContent = `${movie.title} (Anno: ${movie.year})`;
+                    //list.appendChild(li);
+
+                    const div_col = document.createElement("div");
+                    div_col.classList.add("col");
+
+                    const card = document.createElement("div");
+                    card.classList.add("card");
+
+                    const card_body = document.createElement("div");
+                    card_body.classList.add("card-body");
+
+                    const h5 = document.createElement("h5");
+                    h5.classList.add("card-title");
+                    h5.textContent = movie.title;
+
+                    const p = document.createElement("p");
+                    p.classList.add("card-text");
+                    p.textContent = movie.year;
+
+                    const div_bottoni = document.createElement("div")
+                    div_bottoni.classList.add("d-flex", "flex-column", "gap-2");
+
+                    const a = document.createElement("a");
+                    a.classList.add("btn", "btn-primary");
+                    a.textContent = "vai alla scheda del film";
+                    //a.href = `movies_id.html?id=${movie.id}`;
+                    a.addEventListener("click", () => { //a questo "a" aggiungi un evento che a questo click fara questo
+                        window.location.href = `movies_id.html?id=${movie.id}`
+                    })
+
+                    const a2 = document.createElement("a");
+                    a2.classList.add("btn", "btn-primary");
+                    a2.textContent = "Apri popup del film";
+                    //a.href = `movies_id.html?id=${movie.id}`;
+                    a2.addEventListener("click", () => {
+                        apri_popup(movie.id);
+                    })
+
+
+                    div_bottoni.appendChild(a);
+                    div_bottoni.appendChild(a2);
+
+                    card_body.appendChild(h5);
+                    card_body.appendChild(p);
+                    card_body.appendChild(div_bottoni);
+
+
+                    card.appendChild(card_body);
+
+                    div_col.appendChild(card);
+
+                    contenuto.appendChild(div_col);
+
+
+
+                    //a += `<div class="col">
+                    //        <div class="card">
+                    //            <div class="card-body">
+                    //                <h5 class="card-title">${movie.title}</h5>
+                    //                <p class="card-text">${movie.year}</p>
+                    //                <a href="movies_id.html?id=${movie.id}" class="btn btn-primary">vai alla scheda del film</a>
+                    //            </div>
+                    //        </div>
+                    //     </div>`
                 });
+
+                /*  document.querySelector("#contenuto").innerHTML = a;*/
+
             })
             .catch(error => console.error("Errore:", error));
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>
