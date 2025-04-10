@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Persone</title>
+</head>
+<body>
+    <h1>Lista Persone</h1>
+    <ul id="peopleList"></ul>
+
+    <script>
+        fetch('/api/people')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("peopleList");
+                data.forEach(person => {
+                    const li = document.createElement("li");
+                    li.textContent = `${person.name} (Età: ${person.age})`;
+                    list.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Errore:", error));
+    </script>
+</body>
+</html>

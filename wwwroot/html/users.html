@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Aggiungi Utente</title>
+</head>
+<body>
+    <h1>Aggiungi Utente</h1>
+    <form id="userForm">
+        <input type="text" id="name" placeholder="Nome" required><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <button type="submit">Invia</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        document.getElementById("userForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const user = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value
+            };
+
+            fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("message").textContent = data.message;
+                document.getElementById("userForm").reset();
+            })
+            .catch(error => console.error("Errore:", error));
+        });
+    </script>
+</body>
+</html>

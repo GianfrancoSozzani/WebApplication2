@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Film</title>
+</head>
+<body>
+    <h1>Lista Film</h1>
+    <ul id="moviesList"></ul>
+
+    <script>
+        fetch('/api/movies')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("moviesList");
+                data.forEach(movie => {
+                    const li = document.createElement("li");
+                    li.textContent = `${movie.title} (Anno: ${movie.year})`;
+                    list.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Errore:", error));
+    </script>
+</body>
+</html>

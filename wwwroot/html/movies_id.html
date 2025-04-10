@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Film</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        .movie {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dettagli Film</h1>
+    <div id="movieDetails"></div>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const movieId = getQueryParam("id");
+        const container = document.getElementById("movieDetails");
+
+        //console.log(movieId);
+
+        if (!movieId) {
+            container.innerHTML = "<p style='color:red;'>Nessun ID fornito nell'URL. Usa ?id=NUMERO</p>";
+        } else {
+            fetch(`/api/movies/${movieId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Film non trovato");
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const movie = data[0];
+
+                    container.innerHTML = `
+                            <div class="movie">
+                                <h2>${movie.title}</h2>
+                                <p><strong>Anno:</strong> ${movie.year}</p>
+                                <p><strong>ID:</strong> ${movie.id}</p>
+                            </div>
+                        `;
+                })
+                .catch(error => {
+                    container.innerHTML = `<p style="color:red;">${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
